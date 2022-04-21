@@ -140,6 +140,12 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a href="{{url('admin/Lang/langsInfo')}}" id="Lang">
+                            <i class="fa fa-gift"></i>@lang('leftsidebar.Langs')
+                        </a>
+                    </li>
+
                 </ul>
             </li> 
         </ul>

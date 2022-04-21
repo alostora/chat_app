@@ -17,9 +17,10 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('country')->nullable();
             $table->string('phone')->nullable()->unique();
             $table->enum('gender',['male','female'])->nullable();
-            $table->string('birthDate')->unique();
+            $table->string('birthDate')->nullable();
             $table->string('image')->default('defaultLogo.png');
             $table->string('api_token')->unique()->nullable();
             $table->string('verify_token')->unique()->nullable();

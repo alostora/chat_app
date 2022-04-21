@@ -88,11 +88,12 @@ class Users_auth extends Controller
 
     public function updateProfile(Request $request){
         
-        if(!UserRepo::UserUpdateValidate($request)['status']){
-            return  UserRepo::UserUpdateValidate($request);
+        $validator = UserRepo::UserCreateValidate($request);
+        if($validator->fails()) {
+            return UserRepo::ValidateResponse($validator);
         }
 
-        $data = UserRepo::UserUpdateValidate($request)['validator'];
+        $data = $validator->validate();
         $destinationPath = public_path('uploads/users/');
         $user = Auth::guard("api")->user();
         $data['image'] = $user->image;
@@ -158,6 +159,18 @@ class Users_auth extends Controller
 
         return $data;
     }
+
+
+
+
+
+    public function createLang(Request $request){
+        return $request->all();
+    }
+
+
+
+
 
 
 

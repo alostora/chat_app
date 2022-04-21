@@ -102,6 +102,17 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'lang'],funct
 		});
 
 
+
+		//langs
+		Route::group(['prefix'=>'Lang'],function(){
+			Route::get('langsInfo','Langs@langsInfo');
+			Route::get('viewCreateLang/{id?}','Langs@viewCreateLang');
+			Route::post('createLang','Langs@createLang');
+			Route::get('deleteLang/{id}','Langs@deleteLang');
+			Route::get('deleteManyLangs/{ids}','Langs@deleteManyLangs');
+		});
+
+
 		//categories
 		Route::group(['prefix'=>'Category'],function(){
 			Route::get('categoriesInfo','Categories@categoriesInfo');

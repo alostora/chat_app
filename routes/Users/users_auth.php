@@ -13,17 +13,19 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
 
     //Auth Routes
     Route::group(['middleware'=>'user_auth_api'],function(){
+
         //users
         Route::get('profile','Users_auth@profile');
         Route::post('updateProfile','Users_auth@updateProfile');
         Route::post('changePassword','Users_auth@changePassword');
         Route::get('logOut','Users_auth@logOut');
 
-        //categories
-        Route::get('mainTyps','Categories@mainTyps');
-        Route::get('categories/{type_id}','Categories@categories');
-        Route::get('subCategories/{cat_id}','Categories@subCategories');
-        Route::get('items/{sub_cat_id}','Categories@items');
+
+        Route::group(['namespace'=>'Chat'],function(){
+
+            Route::get('langs','Chats@langs');
+            Route::post('createLang','Chats@createLang');
+        });
 
     });
 });

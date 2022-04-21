@@ -13,16 +13,16 @@ class UserRepo extends Repo{
 	    $validator = Validator::make($request->all(),[
 	        'name' => 'required|max:100',
 	        'email' => 'required|unique:users,email,'.Auth::guard('api')->id().'|max:100',
-	        'phone' => 'required|unique:users,phone,'.Auth::guard('api')->id().'|max:100',
+	        'phone' => 'unique:users,phone,'.Auth::guard('api')->id().'|max:100',
 	        'gender' => 'in:male,female',
+	        'country' => 'required|max:10',
 	        'birthDate' => 'date',
-	        'password' => 'required|max:100',
+	        'password' => 'max:100',
 	        'confirmPassword' => 'same:password',
+	        'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:4048',
 	    ]);
 
-        if($validator->fails()) {
-            return self::ValidateResponse($validator);
-        }
+        return $validator;
 	}
 
 
@@ -41,30 +41,6 @@ class UserRepo extends Repo{
         }
 	}
 
-
-
-
-   	public static function UserUpdateValidate($request){
-
-	    $validator = Validator::make($request->all(),[
-	        'name' => 'required|max:100',
-	        'email' => 'required|unique:users,email,'.Auth::guard('api')->id().'|max:100',
-	        'phone' => 'required|unique:users,phone,'.Auth::guard('api')->id().'|max:100',
-	        'gender' => 'in:male,female',
-	        'birthDate' => 'date',
-	        'password' => 'max:100',
-	        'confirmPassword' => 'same:password',
-	        'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:4048',
-	    ]);
-
-        if($validator->fails()) {
-            return self::ValidateResponse($validator);
-        }
-
-        $data['status'] = true;
-        $data['validator'] = $validator->validated();
-        return $data;
-	}
 
 
 
@@ -95,15 +71,6 @@ class UserRepo extends Repo{
 	}
 
 
-
-
-    public static function ValidateResponse($validator){
-
-        $data['status'] = false;
-        $err = $validator->errors()->toArray();
-        $data['message'] = array_values($err)[0][0];
-        return $data;
-    }
 
 
 

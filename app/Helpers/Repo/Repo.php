@@ -11,4 +11,17 @@ class Repo{
         $image->move($destinationPath, $imageName);
         return $imageName;
 	}
+
+
+
+	
+
+    public static function ValidateResponse($validator){
+
+        $data['status'] = false;
+        $err = $validator->errors()->toArray();
+        $data['message'] = array_values($err)[0][0];
+        return $data;
+    }
+
 }
