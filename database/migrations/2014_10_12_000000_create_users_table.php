@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('country')->nullable();
             $table->string('phone')->nullable()->unique();
             $table->enum('gender',['male','female'])->nullable();
             $table->string('birthDate')->nullable();
@@ -26,6 +25,10 @@ class CreateUsersTable extends Migration
             $table->string('verify_token')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('country');
+            $table->string('country_key');
+            $table->boolean('online');
+            $table->string('last_login_at');
             $table->rememberToken();
             $table->timestamps();
         });

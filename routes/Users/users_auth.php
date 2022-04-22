@@ -25,6 +25,7 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
 
             Route::get('langs','Chats@langs');
             Route::post('createLang','Chats@createLang');
+            Route::post('changeLoginStatus','Chats@changeLoginStatus');
         });
 
     });

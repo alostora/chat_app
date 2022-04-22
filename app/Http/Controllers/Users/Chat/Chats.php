@@ -28,8 +28,8 @@ class Chats extends Controller
         if($validator->fails()) {
             return ChatRepo::ValidateResponse($validator);
         }
-        
         $info = $validator->validate();
+        
         $info['user_id'] = Auth::guard('api')->id();
 
 
@@ -44,8 +44,29 @@ class Chats extends Controller
 
         return $data;
 
+    }
 
 
+
+
+
+    public function changeLoginStatus(Request $request){
+        $validator = ChatRepo::UserChangeLoginState($request);
+        if($validator->fails()) {
+            return ChatRepo::ValidateResponse($validator);
+        }
+
+        $validator = $validator->validate();
+        $user = Auth::guard('api')->user();
+        $user->online = $validator['online'];
+        $user->last_login_at = $validator['last_login_at'];
+        $user->save();
+
+
+        $data['status'] = true;
+        $data['message'] = 'login status changed';
+
+        return $data;
     }
 
 

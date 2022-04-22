@@ -19,6 +19,10 @@ return [
     'name' => 'Name',
     'image_url' => 'Image',
     'type' => 'Main type',
+    'country' => 'Country',
+    'online' => 'Online',
+    'last_login_at' => 'Last login',
+
 
 
 

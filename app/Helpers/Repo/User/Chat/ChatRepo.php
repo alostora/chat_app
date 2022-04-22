@@ -15,6 +15,18 @@ class ChatRepo extends Repo{
             'lang_id' => 'required|array',
         ]);
 
+        return $validator;
+    }
+
+
+
+
+    public static function UserChangeLoginState($request){
+
+        $validator = Validator::make($request->all(),[
+            'online' => 'required|boolean',
+            'last_login_at' => 'required',
+        ]);
 
         return $validator;
     }

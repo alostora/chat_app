@@ -16,22 +16,24 @@ use App\Mail\Forget_pass;
 
 class Users_auth extends Controller
 {
-    
+
 
 
 
     public function register(Request $request){
-    
-        
-        $validator = UserRepo::UserCreateValidate($request);
+
+        $validator = UserRepo::UserRegisterValidate($request);
         if($validator->fails()) {
             return UserRepo::ValidateResponse($validator);
         }
 
-        $userr = User::create($request->except(['confirmPassword']));
+        $validator = $validator->validated();
+        unset($validator['confirmPassword']);
+
+        $userr = User::create($validator);
         $data['status'] = true;
         $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible('image_path') ;
-        
+
         return $data;
     }
 
@@ -41,15 +43,18 @@ class Users_auth extends Controller
 
     public function login(Request $request){
 
-        if(UserRepo::UserLoginValidate($request)){
-            return  UserRepo::UserLoginValidate($request);
-        }
 
-        $user = User::where('email',$request->email)->first();
+        $validator = UserRepo::UserLoginValidate($request);
+        if($validator->fails()) {
+            return UserRepo::ValidateResponse($validator);
+        }
+        $validator = $validator->validated();
+
+        $user = User::where('email',$validator['email'])->first();
 
         if(!empty($user)) {
-            if(Hash::check($request->password,$user->password)){
-                
+            if(Hash::check($validator['password'],$user->password)){
+
                 $user->api_token = empty($user->api_token) ? Str::random(50) : $user->api_token;
                 $user->save();
 
@@ -57,12 +62,12 @@ class Users_auth extends Controller
                 $data['user'] = $user->makeVisible(['api_token','image_path'])->makeHidden(['image_url','operations']);
             }else{
                 $data['status'] = false;
-                $data['message'] = Lang::get('leftsidebar.Error_pass');
+                $data['message'] = 'Error_pass';
             }
 
         }else{
             $data['status'] = false;
-            $data['message'] = Lang::get('leftsidebar.Error_email');
+            $data['message'] = 'Error_email';
         }
         return $data;
     }
@@ -89,13 +94,13 @@ class Users_auth extends Controller
 
 
     public function updateProfile(Request $request){
-        
-        $validator = UserRepo::UserCreateValidate($request);
+
+        $validator = UserRepo::UserUpdateValidate($request);
         if($validator->fails()) {
             return UserRepo::ValidateResponse($validator);
         }
-
         $data = $validator->validate();
+
         $destinationPath = public_path('uploads/users/');
         $user = Auth::guard("api")->user();
         $data['image'] = $user->image;
@@ -120,22 +125,23 @@ class Users_auth extends Controller
 
     public function postForgetPass(Request $request){
 
-        if(UserRepo::UserForgetPassValidate($request)){
-            return  UserRepo::UserForgetPassValidate($request);
+        $validator = UserRepo::UserForgetPassValidate($request);
+        if($validator->fails()) {
+            return UserRepo::ValidateResponse($validator);
         }
-        
+        $validator = $validator->validate();
 
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email',$validator['email'])->first();
         if (!empty($user)) {
             $user->verify_token = Str::random(50);
             $user->save();
 
             \Mail::to($user->email)->send(new Forget_pass($user));
             $data['status'] = true;
-            $data['message'] = Lang::get('leftsidebar.Sent');
+            $data['message'] = 'email sent successfully';
         }else{
             $data['status'] = false;
-            $data['message'] = Lang::get('leftsidebar.Empty');
+            $data['message'] = 'email not found';
         }
 
         return $data;
@@ -146,32 +152,24 @@ class Users_auth extends Controller
 
 
     public function changePassword(Request $request){
-        
-        if(UserRepo::UserChangePassValidate($request)){
-            return  UserRepo::UserChangePassValidate($request);
+
+        $validator = UserRepo::UserChangePassValidate($request);
+        if($validator->fails()) {
+            return UserRepo::ValidateResponse($validator);
         }
+        $validator = $validator->validate();
+
 
         $user = Auth::guard('api')->user();
-        $password = Hash::make($request->password);
+        $password = Hash::make($validator['password']);
         $user->password = $password;
         $user->save();
 
         $data['status'] = true;
-        $data['message'] = Lang::get('leftsidebar.Done');
+        $data['message'] = 'password changed successfully';
 
         return $data;
     }
-
-
-
-
-
-    public function createLang(Request $request){
-        return $request->all();
-    }
-
-
-
 
 
 
@@ -182,7 +180,7 @@ class Users_auth extends Controller
         $user = Auth::guard('api')->user();
         $user->api_token = null;
         $user->save();
-        
+
         $data['status'] = true;
         $data['message'] = Lang::get('leftsidebar.Logged_out');
         return $data;
