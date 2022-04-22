@@ -22,8 +22,10 @@ class Users_auth extends Controller
 
     public function register(Request $request){
     
-        if(UserRepo::UserCreateValidate($request)){
-            return  UserRepo::UserCreateValidate($request);
+        
+        $validator = UserRepo::UserCreateValidate($request);
+        if($validator->fails()) {
+            return UserRepo::ValidateResponse($validator);
         }
 
         $userr = User::create($request->except(['confirmPassword']));
