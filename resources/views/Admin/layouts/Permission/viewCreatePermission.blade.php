@@ -1,7 +1,7 @@
 <div class="box-header with-border">
     <h3 class="box-title">@if(empty($data)) @lang('general.add') @else @lang('general.edit') @endif</h3>
 </div>
-<form class="form-horizontal" action="{{url('admin/Admin/Permission/createPermission')}}" method="post">
+<form class="form-horizontal" action="{{url('admin/Permission/createPermission')}}" method="post">
     <div class="box-body">
         @csrf
         <input type="hidden" name="id" value="{{(!empty($data))?$data->id:''}}">

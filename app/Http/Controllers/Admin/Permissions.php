@@ -17,8 +17,8 @@ class Permissions extends Controller
     public function permissionsInfo(){
         $data['data'] = Permission::get();
         $data['title'] = 'permission';
-        $data['createPath'] = url('admin/Admin/Permission/viewCreatePermission');
-        $data['deletePath'] = url('admin/Admin/Permission/deleteManyPermission');
+        $data['createPath'] = url('admin/Permission/viewCreatePermission');
+        $data['deletePath'] = url('admin/Permission/deleteManyPermission');
         return view('Admin/Permission/permissionsInfo',$data);
     }
 

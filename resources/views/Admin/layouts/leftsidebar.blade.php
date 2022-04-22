@@ -27,34 +27,23 @@
                 </a>
                 <ul class="treeview-menu">
 
-                    <!-- Admin -->
-                    <li class="treeview Admin">
-                        <a href="#">
-                            <i class="fa fa-user-secret"></i>
-                            <span>@lang('leftsidebar.Admins')</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                    <li>
+                        <a href="{{url('admin/Admin/adminInfo')}}" id="Admin">
+                            <i class="fa fa-user-md"></i>@lang('leftsidebar.Admins')
                         </a>
-                        <ul class="treeview-menu tree-Admin">
-                            <li>
-                                <a href="{{url('admin/Admin/adminInfo')}}" id="Admin">
-                                    <i class="fa fa-user-md"></i>@lang('leftsidebar.Admins')
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url('admin/Admin/Role/rolesInfo')}}" id="Role">
-                                    <i class="fa fa-flash"></i>@lang('leftsidebar.Roles')
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url('admin/Admin/Permission/permissionsInfo')}}" id="Permission">
-                                    <i class="fa fa-hand-rock-o"></i>@lang('leftsidebar.Permissions')
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-                    <!-- Admin -->
+
+                    <li>
+                        <a href="{{url('admin/Role/rolesInfo')}}" id="Role">
+                            <i class="fa fa-flash"></i>@lang('leftsidebar.Roles')
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{url('admin/Permission/permissionsInfo')}}" id="Permission">
+                            <i class="fa fa-hand-rock-o"></i>@lang('leftsidebar.Permissions')
+                        </a>
+                    </li>
 
                     <li>
                         <a href="{{url('admin/User/userInfo')}}" id="User">
@@ -137,12 +126,6 @@
                     <li>
                         <a href="{{url('admin/Vendor/vendorInfo')}}" id="Vendor">
                             <i class="fa fa-gift"></i>@lang('leftsidebar.Vendors')
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{url('admin/Lang/langsInfo')}}" id="Lang">
-                            <i class="fa fa-gift"></i>@lang('leftsidebar.Langs')
                         </a>
                     </li>
 

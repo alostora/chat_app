@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Repo\Admin\AdminRepo;
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\Permission;
 use Auth;
 use Hash;
 use Lang;
@@ -60,6 +61,7 @@ class Admins extends Controller
 
     public function viewCreateAdmin($id=false){
         $data['data'] = Admin::find($id);
+        $data['permissions'] = Permission::get();
         return view('Admin/Admin/viewCreateAdmin',$data);
     }
 
@@ -70,11 +72,20 @@ class Admins extends Controller
 
         $validated = $request->validate(AdminRepo::AdminCreateValidate($request));
         unset($validated['confirmPassword']);
-        $validated['password'] = Hash::make($validated['password']);
 
         if(empty($validated['id'])){
+            if(empty($validated['password'])) {
+                session()->flash('success','password is required');
+                return back();
+            }
+            $validated['password'] = Hash::make($validated['password']);
             Admin::create($validated);
         }else{
+            if(empty($validated['password'])) {
+                unset($validated['password']);
+            }else{
+                $validated['password'] = Hash::make($validated['password']);
+            }
             Admin::where('id',$validated['id'])->update($validated);
         }
 

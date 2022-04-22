@@ -34,6 +34,7 @@ class UserRepo extends Repo{
 	        'country_key' => 'max:10',
 	        'birthDate' => 'date',
 	        'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+	        'bio' => 'max:1000',
 	    ]);
 
         return $validator;

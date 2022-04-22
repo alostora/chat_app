@@ -19,10 +19,13 @@ return [
     'name' => 'Name',
     'image_url' => 'Image',
     'type' => 'Main type',
-    'country' => 'Country',
-    'online' => 'Online',
-    'last_login_at' => 'Last login',
 
+
+    "bio" => "Biography",
+    "last_login_at" => "Last login",
+    "online" => "Online",
+    "country_key" => "Country key",
+    "country" => "Country",
 
 
 

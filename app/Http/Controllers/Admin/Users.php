@@ -15,7 +15,7 @@ class Users extends Controller
 
     public function userInfo(){
 
-        $data['data'] = User::get()->makeHidden(['langauges','country']);
+        $data['data'] = User::get()->makeHidden(['langauges','country_key','bio','']);
         $data['title'] = 'user';
         $data['createPath'] = url('admin/User/viewCreateUser');
         $data['deletePath'] = url('admin/User/deleteManyUsers');

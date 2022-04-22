@@ -3,7 +3,7 @@
       {{empty($cat) ? Lang::get('general.add') : Lang::get('general.edit')}}
     </h3>
 </div>
-<form class="form-horizontal" action="{{url('admin/Admin/Role/createRole')}}" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="{{url('admin/Role/createRole')}}" method="post" enctype="multipart/form-data">
     <div class="box-body">
       @csrf
       <input type="hidden" name="id" value="{{!empty($data) ? $data->id : ''}}">

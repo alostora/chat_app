@@ -8,11 +8,12 @@ class AdminRepo extends Repo{
 
 	public static function AdminCreateValidate($request){
 		return [
-            "id" => "nullable",
-            "name" => "required|max:100",
+            "id" => "nullable|integer",
+            "name" => "required|string|max:100",
             'email' => 'required|unique:admins,email,'.$request->id.'|max:100',
-            'password' => 'required|max:100',
+            'password' => 'max:100',
             'confirmPassword' => 'same:password',
+            'permission_id' => 'required|integer',
         ];
 	}
 

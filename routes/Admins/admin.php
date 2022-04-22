@@ -23,186 +23,182 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'lang'],funct
 		Route::get('/','Admins@dashboard');
 
 		Route::group(['prefix'=>'Admin'],function(){
-			//admins
-			Route::get('adminInfo','Admins@adminInfo');
-			Route::get('viewCreateAdmin/{id?}','Admins@viewCreateAdmin');
-			Route::post('createAdmin','Admins@createAdmin');
-			Route::get('deleteAdmin/{id}','Admins@deleteAdmin');
-			Route::get('deleteManyAdmins/{ids}','Admins@deleteManyAdmins');
-			
-			//permissions
-			Route::group(['prefix'=>'Permission'],function(){
-				Route::get('permissionsInfo','Permissions@permissionsInfo');
-				Route::get('viewCreatePermission/{id?}','Permissions@viewCreatePermission');
-				Route::post('createPermission','Permissions@createPermission');
-				Route::get('deletePermission/{id}','Permissions@deletePermission');
-				Route::get('deleteManyPermission/{id}','Permissions@deleteManyPermission');
-			
-			});
 
-			//roles
-			Route::group(['prefix'=>'Role'],function(){
-				Route::get('rolesInfo','Roles@rolesInfo');
-				Route::get('viewCreateRole/{id?}','Roles@viewCreateRole');
-				Route::post('createRole','Roles@createRole');
-				Route::get('deleteRole/{id}','Roles@deleteRole');
-				Route::get('deleteManyRole/{id}','Roles@deleteManyRole');
+			//admins
+			Route::get('adminInfo','Admins@adminInfo')->middleware('permissions:Admin,view');
+			Route::get('viewCreateAdmin/{id?}','Admins@viewCreateAdmin')->middleware('permissions:Admin,create');
+			Route::post('createAdmin','Admins@createAdmin')->middleware('permissions:Admin,create');
+			Route::get('deleteAdmin/{id}','Admins@deleteAdmin')->middleware('permissions:Admin,delete');
+			Route::get('deleteManyAdmins/{ids}','Admins@deleteManyAdmins')->middleware('permissions:Admin,delete');
 			
-			});
+		});
+		
+		//permissions
+		Route::group(['prefix'=>'Permission'],function(){
+			Route::get('permissionsInfo','Permissions@permissionsInfo')->middleware('permissions:Permission,view');
+			Route::get('viewCreatePermission/{id?}','Permissions@viewCreatePermission')->middleware('permissions:Permission,create');
+			Route::post('createPermission','Permissions@createPermission')->middleware('permissions:Permission,create');
+			Route::get('deletePermission/{id}','Permissions@deletePermission')->middleware('permissions:Permission,delete');
+			Route::get('deleteManyPermission/{id}','Permissions@deleteManyPermission')->middleware('permissions:Permission,delete');
+		
+		});
+
+		//roles
+		Route::group(['prefix'=>'Role'],function(){
+			Route::get('rolesInfo','Roles@rolesInfo')->middleware('permissions:Role,view');
+			Route::get('viewCreateRole/{id?}','Roles@viewCreateRole')->middleware('permissions:Role,create');
+			Route::post('createRole','Roles@createRole')->middleware('permissions:Role,create');
+			Route::get('deleteRole/{id}','Roles@deleteRole')->middleware('permissions:Role,delete');
+			Route::get('deleteManyRole/{id}','Roles@deleteManyRole')->middleware('permissions:Role,delete');
+		
 		});
 
 
 		//users
 		Route::group(['prefix'=>'User'],function(){
-			Route::get('userInfo','Users@userInfo');
-			Route::get('viewCreateUser/{id?}','Users@viewCreateUser');
-			Route::post('createUser','Users@createUser');
-			Route::get('deleteUser/{id}','Users@deleteUser');
-			Route::get('deleteManyUsers/{ids}','Users@deleteManyUsers');
+			Route::get('userInfo','Users@userInfo')->middleware('permissions:User,view');
+			Route::get('viewCreateUser/{id?}','Users@viewCreateUser')->middleware('permissions:User,create');
+			Route::post('createUser','Users@createUser')->middleware('permissions:User,create');
+			Route::get('deleteUser/{id}','Users@deleteUser')->middleware('permissions:User,delete');
+			Route::get('deleteManyUsers/{ids}','Users@deleteManyUsers')->middleware('permissions:User,delete');
 		});
 
 
 		//vendros
 		Route::group(['prefix'=>'Vendor'],function(){
-			Route::get('vendorInfo','Vendors@vendorInfo');
-			Route::get('viewCreateVendor/{id?}','Vendors@viewCreateVendor');
-			Route::post('createVendor','Vendors@createVendor');
-			Route::get('deleteVendor/{id}','Vendors@deleteVendor');
-			Route::get('deleteManyVendors/{ids}','Vendors@deleteManyVendors');
+			Route::get('vendorInfo','Vendors@vendorInfo')->middleware('permissions:Vendor,view');
+			Route::get('viewCreateVendor/{id?}','Vendors@viewCreateVendor')->middleware('permissions:Vendor,create');
+			Route::post('createVendor','Vendors@createVendor')->middleware('permissions:Vendor,create');
+			Route::get('deleteVendor/{id}','Vendors@deleteVendor')->middleware('permissions:Vendor,delete');
+			Route::get('deleteManyVendors/{ids}','Vendors@deleteManyVendors')->middleware('permissions:Vendor,delete');
 		});
 
 
 		//main types
 		Route::group(['prefix'=>'Main_type'],function(){
-			Route::get('mainTypesInfo','MainTypes@mainTypesInfo');
-			Route::get('viewCreateMainType/{id?}','MainTypes@viewCreateMainType');
-			Route::post('createMainType','MainTypes@createMainType');
-			Route::get('deleteMainType/{id}','MainTypes@deleteMainType');
-			Route::get('deleteManyMainTypes/{ids}','MainTypes@deleteManyMainTypes');
+			Route::get('mainTypesInfo','MainTypes@mainTypesInfo')->middleware('permissions:Main_type,view');
+			Route::get('viewCreateMainType/{id?}','MainTypes@viewCreateMainType')->middleware('permissions:Main_type,create');
+			Route::post('createMainType','MainTypes@createMainType')->middleware('permissions:Main_type,create');
+			Route::get('deleteMainType/{id}','MainTypes@deleteMainType')->middleware('permissions:Main_type,delete');
+			Route::get('deleteManyMainTypes/{ids}','MainTypes@deleteManyMainTypes')->middleware('permissions:Main_type,delete');
 		});
 
 
 		//sizes
 		Route::group(['prefix'=>'Size'],function(){
-			Route::get('sizesInfo','Sizes@sizesInfo');
-			Route::get('viewCreateSize/{id?}','Sizes@viewCreateSize');
-			Route::post('createSize','Sizes@createSize');
-			Route::get('deleteSize/{id}','Sizes@deleteSize');
-			Route::get('deleteManySizes/{ids}','Sizes@deleteManySizes');
+			Route::get('sizesInfo','Sizes@sizesInfo')->middleware('permissions:Size,view');
+			Route::get('viewCreateSize/{id?}','Sizes@viewCreateSize')->middleware('permissions:Size,create');
+			Route::post('createSize','Sizes@createSize')->middleware('permissions:Size,create');
+			Route::get('deleteSize/{id}','Sizes@deleteSize')->middleware('permissions:Size,delete');
+			Route::get('deleteManySizes/{ids}','Sizes@deleteManySizes')->middleware('permissions:Size,delete');
 		});
 
 
 		//measur_unets
 		Route::group(['prefix'=>'Measur_unit'],function(){
-			Route::get('measurUnitsInfo','MeasurUnits@measurUnitsInfo');
-			Route::get('viewCreateMeasurUnit/{id?}','MeasurUnits@viewCreateMeasurUnit');
-			Route::post('createMeasurUnit','MeasurUnits@createMeasurUnit');
-			Route::get('deleteMeasurUnit/{id}','MeasurUnits@deleteMeasurUnit');
-			Route::get('deleteManyMeasurUnits/{ids}','MeasurUnits@deleteManyMeasurUnits');
+			Route::get('measurUnitsInfo','MeasurUnits@measurUnitsInfo')->middleware('permissions:Measur_unit,view');
+			Route::get('viewCreateMeasurUnit/{id?}','MeasurUnits@viewCreateMeasurUnit')->middleware('permissions:Measur_unit,create');
+			Route::post('createMeasurUnit','MeasurUnits@createMeasurUnit')->middleware('permissions:Measur_unit,create');
+			Route::get('deleteMeasurUnit/{id}','MeasurUnits@deleteMeasurUnit')->middleware('permissions:Measur_unit,delete');
+			Route::get('deleteManyMeasurUnits/{ids}','MeasurUnits@deleteManyMeasurUnits')->middleware('permissions:Measur_unit,delete');
 		});
 
 
-
-		//langs
-		Route::group(['prefix'=>'Lang'],function(){
-			Route::get('langsInfo','Langs@langsInfo');
-			Route::get('viewCreateLang/{id?}','Langs@viewCreateLang');
-			Route::post('createLang','Langs@createLang');
-			Route::get('deleteLang/{id}','Langs@deleteLang');
-			Route::get('deleteManyLangs/{ids}','Langs@deleteManyLangs');
-		});
 
 
 		//categories
 		Route::group(['prefix'=>'Category'],function(){
-			Route::get('categoriesInfo','Categories@categoriesInfo');
-			Route::get('viewCreateCategory/{id?}','Categories@viewCreateCategory');
-			Route::post('createCategory','Categories@createCategory');
-			Route::get('deleteCategory/{id}','Categories@deleteCategory');
-			Route::get('deleteManyCategories/{ids}','Categories@deleteManyCategories');
+			Route::get('categoriesInfo','Categories@categoriesInfo')->middleware('permissions:Category,view');
+			Route::get('viewCreateCategory/{id?}','Categories@viewCreateCategory')->middleware('permissions:Category,create');
+			Route::post('createCategory','Categories@createCategory')->middleware('permissions:Category,create');
+			Route::get('deleteCategory/{id}','Categories@deleteCategory')->middleware('permissions:Category,delete');
+			Route::get('deleteManyCategories/{ids}','Categories@deleteManyCategories')->middleware('permissions:Category,delete');
 		});
 
 
 		//sub categories
 		Route::group(['prefix'=>'S_category'],function(){
-			Route::get('s_categoriesInfo','S_categories@s_categoriesInfo');
-			Route::get('viewCreateS_category/{id?}','S_categories@viewCreateS_category');
-			Route::post('createS_category','S_categories@createS_category');
-			Route::get('deleteS_category/{id}','S_categories@deleteS_category');
-			Route::get('deleteManyS_categories/{ids}','S_categories@deleteManyS_categories');
+			Route::get('s_categoriesInfo','S_categories@s_categoriesInfo')->middleware('permissions:S_category,view');
+			Route::get('viewCreateS_category/{id?}','S_categories@viewCreateS_category')->middleware('permissions:S_category,create');
+			Route::post('createS_category','S_categories@createS_category')->middleware('permissions:S_category,create');
+			Route::get('deleteS_category/{id}','S_categories@deleteS_category')->middleware('permissions:S_category,delete');
+			Route::get('deleteManyS_categories/{ids}','S_categories@deleteManyS_categories')->middleware('permissions:S_category,delete');
 		});
 		
 
 		//generalSetting
 		Route::group(['prefix'=>'Setting'],function(){
-			Route::get('generalSetting','Settings@generalSetting');
-			Route::get('viewCreateSetting/{id?}','Settings@viewCreateSetting');
-			Route::post('createSetting','Settings@createSetting');
-			Route::get('deleteSetting/{id}','Settings@deleteSetting');
-			Route::get('deleteManySettings/{ids}','Settings@deleteManySettings');
+			Route::get('generalSetting','Settings@generalSetting')->middleware('permissions:Setting,view');
+			Route::get('viewCreateSetting/{id?}','Settings@viewCreateSetting')->middleware('permissions:Setting,create');
+			Route::post('createSetting','Settings@createSetting')->middleware('permissions:Setting,create');
+			Route::get('deleteSetting/{id}','Settings@deleteSetting')->middleware('permissions:Setting,delete');
+			Route::get('deleteManySettings/{ids}','Settings@deleteManySettings')->middleware('permissions:Setting,delete');
 		});
 
 
 		//countries
 		Route::group(['prefix'=>'Country'],function(){
-			Route::get('countriesInfo','Countries@countriesInfo');
-			Route::get('viewCreateCountry/{id?}','Countries@viewCreateCountry');
-			Route::post('createCountry','Countries@createCountry');
-			Route::get('deleteCountry/{id}','Countries@deleteCountry');
-			Route::get('deleteManyCountries/{ids}','Countries@deleteManyCountries');
+			Route::get('countriesInfo','Countries@countriesInfo')->middleware('permissions:Country,view');
+			Route::get('viewCreateCountry/{id?}','Countries@viewCreateCountry')->middleware('permissions:Country,create');
+			Route::post('createCountry','Countries@createCountry')->middleware('permissions:Country,create');
+			Route::get('deleteCountry/{id}','Countries@deleteCountry')->middleware('permissions:Country,delete');
+			Route::get('deleteManyCountries/{ids}','Countries@deleteManyCountries')->middleware('permissions:Country,delete');
 		});
 
 
 		//cities
 		Route::group(['prefix'=>'City'],function(){
-			Route::get('citiesInfo','Cities@citiesInfo');
-			Route::get('viewCreateCity/{id?}','Cities@viewCreateCity');
-			Route::post('createCity','Cities@createCity');
-			Route::get('deleteCity/{id}','Cities@deleteCity');
-			Route::get('deleteManyCities/{ids}','Cities@deleteManyCities');
+			Route::get('citiesInfo','Cities@citiesInfo')->middleware('permissions:City,view');
+			Route::get('viewCreateCity/{id?}','Cities@viewCreateCity')->middleware('permissions:City,create');
+			Route::post('createCity','Cities@createCity')->middleware('permissions:City,create');
+			Route::get('deleteCity/{id}','Cities@deleteCity')->middleware('permissions:City,delete');
+			Route::get('deleteManyCities/{ids}','Cities@deleteManyCities')->middleware('permissions:City,delete');
 		});
 
 
 		//stats
 		Route::group(['prefix'=>'State'],function(){
-			Route::get('statesInfo','States@statesInfo');
-			Route::get('viewCreateState/{id?}','States@viewCreateState');
-			Route::post('createState','States@createState');
-			Route::get('deleteState/{id}','States@deleteState');
-			Route::get('deleteManyStates/{ids}','States@deleteManyStates');
+			Route::get('statesInfo','States@statesInfo')->middleware('permissions:State,view');
+			Route::get('viewCreateState/{id?}','States@viewCreateState')->middleware('permissions:State,create');
+			Route::post('createState','States@createState')->middleware('permissions:State,create');
+			Route::get('deleteState/{id}','States@deleteState')->middleware('permissions:State,delete');
+			Route::get('deleteManyStates/{ids}','States@deleteManyStates')->middleware('permissions:State,delete');
+			//cities //without middleware ajax request
 			Route::get('getCities/{city_id}','States@getCities');
 		});
 
 
 		//brands
 		Route::group(['prefix'=>'Brand'],function(){
-			Route::get('brandsInfo','Brands@brandsInfo');
-			Route::get('viewCreateBrand/{id?}','Brands@viewCreateBrand');
-			Route::post('createBrand','Brands@createBrand');
-			Route::get('deleteBrand/{id}','Brands@deleteBrand');
-			Route::get('deleteManyBrands/{ids}','Brands@deleteManyBrands');
+			Route::get('brandsInfo','Brands@brandsInfo')->middleware('permissions:Brand,view');
+			Route::get('viewCreateBrand/{id?}','Brands@viewCreateBrand')->middleware('permissions:Brand,create');
+			Route::post('createBrand','Brands@createBrand')->middleware('permissions:Brand,create');
+			Route::get('deleteBrand/{id}','Brands@deleteBrand')->middleware('permissions:Brand,delete');
+			Route::get('deleteManyBrands/{ids}','Brands@deleteManyBrands')->middleware('permissions:Brand,delete');
 		});
 
 
 		//colors
 		Route::group(['prefix'=>'Color'],function(){
-			Route::get('colorsInfo','Colors@colorsInfo');
-			Route::get('viewCreateColor/{id?}','Colors@viewCreateColor');
-			Route::post('createColor','Colors@createColor');
-			Route::get('deleteColor/{id}','Colors@deleteColor');
-			Route::get('deleteManyColors/{ids}','Colors@deleteManyColors');
+			Route::get('colorsInfo','Colors@colorsInfo')->middleware('permissions:Color,view');
+			Route::get('viewCreateColor/{id?}','Colors@viewCreateColor')->middleware('permissions:Color,create');
+			Route::post('createColor','Colors@createColor')->middleware('permissions:Color,create');
+			Route::get('deleteColor/{id}','Colors@deleteColor')->middleware('permissions:Color,delete');
+			Route::get('deleteManyColors/{ids}','Colors@deleteManyColors')->middleware('permissions:Color,delete');
 		});
 
 
 		//items
 		Route::group(['prefix'=>'Item'],function(){
-			Route::get('itemsInfo','Items@itemsInfo');
-			Route::get('viewCreateItem/{id?}','Items@viewCreateItem');
-			Route::post('createItem','Items@createItem');
-			Route::post('createItemImages','Items@createItemImages');
-			Route::get('deleteItem/{id}','Items@deleteItem');
-			Route::get('deleteManyItems/{ids}','Items@deleteManyItems');
-			Route::get('removedFile/{id}','Items@removedFile');
+			Route::get('itemsInfo','Items@itemsInfo')->middleware('permissions:Item,view');
+			Route::get('viewCreateItem/{id?}','Items@viewCreateItem')->middleware('permissions:Item,create');
+			Route::post('createItem','Items@createItem')->middleware('permissions:Item,create');
+			Route::get('deleteItem/{id}','Items@deleteItem')->middleware('permissions:Item,delete');
+			Route::get('deleteManyItems/{ids}','Items@deleteManyItems')->middleware('permissions:Item,delete');
+			//item_images
+			Route::post('createItemImages','Items@createItemImages')->middleware('permissions:Item_image,create');
+			Route::get('removedFile/{id}','Items@removedFile')->middleware('permissions:Item_image,delete');
+			//sizes //without middleware ajax request
 			Route::get('getSizes/{sub_cat_id}','Items@getSizes');
 		});
 

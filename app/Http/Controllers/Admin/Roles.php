@@ -16,8 +16,8 @@ class Roles extends Controller
     public function rolesInfo(){
         $data['data'] = Role::get();
         $data['title'] = 'role';
-        $data['createPath'] = url('admin/Admin/Role/viewCreateRole');
-        $data['deletePath'] = url('admin/Admin/Role/deleteManyRoles');
+        $data['createPath'] = url('admin/Role/viewCreateRole');
+        $data['deletePath'] = url('admin/Role/deleteManyRoles');
         return view('Admin/Roles/rolesInfo',$data);
     }
 

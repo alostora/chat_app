@@ -26,6 +26,20 @@
                 <input type="password" name="confirmPassword" class="form-control input-lg" placeholder="@lang('admin.confirm_password')" @if(empty($data)) required @endif id="confirmPassword">
             </div>
         </div>
+
+        <div class="form-group">
+            <label for="permission_id" class="col-sm-2 control-label">@lang('admin.permission_id')</label>
+            <div class="col-sm-4">
+                <select name="permission_id" class="form-control input-lg select2" id="permission_id">
+                    @if(!empty($permissions))
+                        @foreach($permissions as $permission)
+                            <option value="{{$permission->id}}"  {{!empty($data) && $data->permission_id == $permission->id ? 'selected' : ''}}>{{$permission->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        </div>
+
     </div>
     <div class="box-footer">
         <input type="submit" class="btn btn-info" value="{{empty($data) ? Lang::get('general.add') : Lang::get('general.edit')}}">

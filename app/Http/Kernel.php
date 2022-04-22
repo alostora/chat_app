@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'user_auth_api' => \App\Http\Middleware\User_auth_api::class,
         'admin_auth' => \App\Http\Middleware\Admin_auth::class,
+        'permissions' => \App\Http\Middleware\Permissions::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

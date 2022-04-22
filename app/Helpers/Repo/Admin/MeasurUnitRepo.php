@@ -16,4 +16,28 @@ class MeasurUnitRepo extends Repo{
         ];
 	}
 
+
+
+
+    public static function MeasurUnitRows($data){
+
+        if (!empty($data)) {
+            foreach($data as $daa){
+
+                $daa->unitName = app()->getLocale() == 'ar' ? $daa->unitNameAr : $daa->unitName;
+                $daa->operations = [
+                    "edit" => url('admin/viewCreateMeasurUnit/'.$daa->id),
+                    "delete" => url('admin/deleteMeasurUnit/'.$daa->id),
+                ];
+            }
+        }
+        $data = array_values($data->toArray());
+        return $data;
+        
+    }
+
+
+
+
+
 }

@@ -30,6 +30,7 @@ class User extends Authenticatable
         'country_key',
         'online',//bolean
         'last_login_at',
+        'bio',
     ];
 
     /**

@@ -21,6 +21,5 @@ return [
 	'Vendors' => 'Vendors',
 	'Permissions' => 'Permissions',
 	'Roles' => 'Roles',
-	'Langs' => 'Languages',
 
 ];
