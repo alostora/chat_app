@@ -26,8 +26,8 @@ class UserRepo extends Repo{
 	public static function UserUpdateValidate($request){
 
 	    $validator = Validator::make($request->all(),[
-	        'name' => 'required|max:100',
-	        'email' => 'required|unique:users,email,'.Auth::guard('api')->id().'|max:100',
+	        'name' => 'max:100',
+	        'email' => 'unique:users,email,'.Auth::guard('api')->id().'|max:100',
 	        'phone' => 'unique:users,phone,'.Auth::guard('api')->id().'|max:100',
 	        'gender' => 'in:male,female',
 	        'country' => 'max:10',

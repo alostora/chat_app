@@ -29,10 +29,10 @@ class Users_auth extends Controller
 
         $validator = $validator->validated();
         unset($validator['confirmPassword']);
-
+        $validator['api_token'] = Str::random(50);
         $userr = User::create($validator);
         $data['status'] = true;
-        $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible('image_path') ;
+        $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
 
         return $data;
     }
@@ -59,7 +59,7 @@ class Users_auth extends Controller
                 $user->save();
 
                 $data['status'] = true;
-                $data['user'] = $user->makeVisible(['api_token','image_path'])->makeHidden(['image_url','operations']);
+                $data['user'] = $user->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
             }else{
                 $data['status'] = false;
                 $data['message'] = 'Error_pass';
@@ -80,7 +80,7 @@ class Users_auth extends Controller
 
         if(Auth::guard('api')->check()) {
             $data['status'] = true;
-            $data['user'] = Auth::guard('api')->user()->makeHidden(['image_url','operations'])->makeVisible('image_path');
+            $data['user'] = Auth::guard('api')->user()->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
         }else{
             $data['status'] = false;
             $data['message'] = Lang::get('leftsidebar.plz_login');
@@ -114,7 +114,7 @@ class Users_auth extends Controller
 
         $user->update($data);
         $info['status'] = true;
-        $info['user'] = $user->makeHidden(['image_url','operations'])->makeVisible('image_path');
+        $info['user'] = $user->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
 
         return $info;
     }
@@ -182,7 +182,7 @@ class Users_auth extends Controller
         $user->save();
 
         $data['status'] = true;
-        $data['message'] = Lang::get('leftsidebar.Logged_out');
+        $data['message'] = "Logged out successfully";
         return $data;
     }
 

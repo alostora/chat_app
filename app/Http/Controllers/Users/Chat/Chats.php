@@ -29,8 +29,8 @@ class Chats extends Controller
             return ChatRepo::ValidateResponse($validator);
         }
         $info = $validator->validate();
-        
-        $info['user_id'] = Auth::guard('api')->id();
+        $user = Auth::guard('api')->user();
+        $info['user_id'] = $user->id;
 
 
         User_lang::where(['user_id'=>$info['user_id'],'type'=>$info['type']])->delete();
@@ -40,7 +40,7 @@ class Chats extends Controller
         }
 
         $data['status'] = true;
-        $data['message'] = 'Langauge created successfully';
+        $data['user'] = $user->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
 
         return $data;
 
