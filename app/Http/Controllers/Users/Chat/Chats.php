@@ -8,7 +8,7 @@ use App\Models\Lang;
 use App\Models\User;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Users\UserResource;
 use Auth;
 
 
