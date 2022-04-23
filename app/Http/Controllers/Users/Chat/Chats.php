@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users\Chat;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lang;
+use App\Models\User;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use Auth;
@@ -65,6 +66,22 @@ class Chats extends Controller
 
         $data['status'] = true;
         $data['message'] = 'login status changed';
+
+        return $data;
+    }
+
+
+
+
+    public function getUsers(){
+        $data['status'] = true;
+        $data['users'] = User::paginate(25);
+        
+        if ($data['users']) {
+            foreach($data['users'] as $user){
+                $user->makeHidden(['image_url','operations','email'])->makeVisible(['image_path']);;
+            }
+        }
 
         return $data;
     }

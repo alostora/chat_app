@@ -188,6 +188,8 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'lang'],funct
 		});
 
 
+
+
 		//items
 		Route::group(['prefix'=>'Item'],function(){
 			Route::get('itemsInfo','Items@itemsInfo')->middleware('permissions:Item,view');
@@ -204,6 +206,14 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'lang'],funct
 
 
 
+		//langs
+		Route::group(['prefix'=>'Lang'],function(){
+			Route::get('langsInfo','Langs@langsInfo')->middleware('permissions:Lang,view');
+			Route::get('viewCreateLang/{id?}','Langs@viewCreateLang')->middleware('permissions:Lang,create');
+			Route::post('createLang','Langs@createLang')->middleware('permissions:Lang,create');
+			Route::get('deleteLang/{id}','Langs@deleteLang')->middleware('permissions:Lang,delete');
+			Route::get('deleteManyLangs/{ids}','Langs@deleteManyLangs')->middleware('permissions:Lang,delete');
+		});
 
 
 	});

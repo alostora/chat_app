@@ -63,9 +63,6 @@ class User extends Authenticatable
 
 
 
-
-
-
     protected $appends = [
         'image_url',
         'image_path',
@@ -99,6 +96,13 @@ class User extends Authenticatable
             "edit" => url('admin/User/viewCreateUser/'.$this->id),
             "delete" => url('admin/User/deleteUser/'.$this->id),
         ];
+    }
+
+
+
+
+    public function user_langauges(){
+        return $this->hasMany(User_lang::class,'user_id');
     }
 
 }

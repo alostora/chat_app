@@ -125,7 +125,13 @@
 
                     <li>
                         <a href="{{url('admin/Vendor/vendorInfo')}}" id="Vendor">
-                            <i class="fa fa-gift"></i>@lang('leftsidebar.Vendors')
+                            <i class="fa fa-circle"></i>@lang('leftsidebar.Vendors')
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{url('admin/Lang/langsInfo')}}" id="Lang">
+                            <i class="fa fa-circle"></i>@lang('leftsidebar.Langauges')
                         </a>
                     </li>
 

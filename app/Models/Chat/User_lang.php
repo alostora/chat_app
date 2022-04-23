@@ -19,7 +19,6 @@ class User_lang extends Model
 
 
     protected $hidden = [
-        'lang_id',
         'user_id',
         'created_at',
         'updated_at',
