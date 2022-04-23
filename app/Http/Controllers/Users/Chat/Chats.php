@@ -8,7 +8,9 @@ use App\Models\Lang;
 use App\Models\User;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
+use App\Http\Resources\UserResource;
 use Auth;
+
 
 class Chats extends Controller
 {
@@ -30,8 +32,7 @@ class Chats extends Controller
             return ChatRepo::ValidateResponse($validator);
         }
         $info = $validator->validate();
-        $user = Auth::guard('api')->user();
-        $info['user_id'] = $user->id;
+        $info['user_id'] = Auth::guard('api')->id();
 
 
         User_lang::where(['user_id'=>$info['user_id'],'type'=>$info['type']])->delete();
@@ -41,8 +42,7 @@ class Chats extends Controller
         }
 
         $data['status'] = true;
-        $data['user'] = $user->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
-
+        $data['user'] = new UserResource(User::find($info['user_id']));
         return $data;
 
     }
@@ -75,14 +75,7 @@ class Chats extends Controller
 
     public function getUsers(){
         $data['status'] = true;
-        $data['users'] = User::paginate(25);
-        
-        if ($data['users']) {
-            foreach($data['users'] as $user){
-                $user->makeHidden(['image_url','operations','email'])->makeVisible(['image_path']);;
-            }
-        }
-
+        $data['users'] = UserResource::collection(User::paginate(25));
         return $data;
     }
 
