@@ -70,11 +70,31 @@ class Chats extends Controller
 
 
 
-    public function getUsers(){
+    public function getUsers(Request $request){
+
+        $user = new User;
+        $repo = new ChatRepo();
+        $users = $repo->UserFilter($request,$user);
+
+        $newUsers = $users->makeHidden(['image_url','operations'])->makeVisible('image_path');
+        $users->data = $newUsers ;
+
         $data['status'] = true;
-        $user = User::paginate(25);
-        $data['users'] = new UserCollection($user);
+        $data['users'] = new UserCollection($users);
         return $data;
+
+    }
+
+
+
+
+
+    public function getUserProfile($user_id){
+
+        $data['status'] = true;
+        $data['user'] = new UserResource(User::find($user_id));
+        return $data;
+
     }
 
 

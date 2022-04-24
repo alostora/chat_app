@@ -11,7 +11,7 @@ class UserCollection extends ResourceCollection
     
     public function toArray($request)
     {
-         return [
+        return [
             'data' => $this->collection,
             'pagination' => [
                 'total' => $this->total(),

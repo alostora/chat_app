@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Chat\User_lang;
+use Carbon\Carbon;
+
 
 class User extends Authenticatable
 {
@@ -51,6 +53,7 @@ class User extends Authenticatable
 
 
     protected $appends = [
+        'age',
         'image_url',
         'image_path',
         'langauges',
@@ -92,7 +95,10 @@ class User extends Authenticatable
         return User_lang::where('user_id',$this->id)->get();
     }
 
-
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->birthDate)->age;
+    }
 
     public function getOperationsAttribute($value){
 

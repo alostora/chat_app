@@ -8,6 +8,7 @@ use Auth;
 
 class UserRepo extends Repo{
 
+
 	public static function UserRegisterValidate($request){
 
 	    $validator = Validator::make($request->all(),[
