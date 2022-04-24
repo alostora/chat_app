@@ -19,6 +19,7 @@ class User_lang extends Model
 
 
     protected $hidden = [
+        'lang_id',
         'user_id',
         'created_at',
         'updated_at',
@@ -41,6 +42,10 @@ class User_lang extends Model
 
     public function getCodeAttribute($value){
         return Lang::find($this->lang_id)->langCode;
+    }
+
+    public function getIdAttribute($value){
+        return $this->lang_id;
     }
 
 

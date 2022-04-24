@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use App\Http\Resources\Users\UserResource;
+use App\Http\Resources\Users\UserCollection;
 use Auth;
 
 
@@ -58,11 +59,7 @@ class Chats extends Controller
         }
 
         $validator = $validator->validate();
-        $user = Auth::guard('api')->user();
-        $user->online = $validator['online'];
-        $user->last_login_at = $validator['last_login_at'];
-        $user->save();
-
+        $user = Auth::guard('api')->user()->update($validator);
 
         $data['status'] = true;
         $data['message'] = 'login status changed';
@@ -75,7 +72,8 @@ class Chats extends Controller
 
     public function getUsers(){
         $data['status'] = true;
-        $data['users'] = UserResource::collection(User::paginate(25));
+        $user = User::paginate(25);
+        $data['users'] = new UserCollection($user);
         return $data;
     }
 
