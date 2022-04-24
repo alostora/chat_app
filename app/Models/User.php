@@ -102,11 +102,4 @@ class User extends Authenticatable
         ];
     }
 
-
-
-
-    public function user_langauges(){
-        return $this->hasMany(User_lang::class,'user_id');
-    }
-
 }
