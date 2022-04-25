@@ -8,7 +8,8 @@ class UserCollection extends ResourceCollection
 {
     
 
-    
+    public $preserveKeys = true;
+
     public function toArray($request)
     {
         return [

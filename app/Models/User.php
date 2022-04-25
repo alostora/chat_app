@@ -95,6 +95,7 @@ class User extends Authenticatable
         return User_lang::where('user_id',$this->id)->get();
     }
 
+
     public function getAgeAttribute()
     {
         return Carbon::parse($this->birthDate)->age;

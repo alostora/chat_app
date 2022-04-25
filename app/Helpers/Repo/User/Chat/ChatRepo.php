@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Helpers\Repo\User\Chat;
-use App\Helpers\Repo\Repo;;
-
+use App\Helpers\Repo\Repo;
+use App\Models\Chat\Chat_room;
+use App\Models\User;
 use Validator;
 
 class ChatRepo extends Repo{
@@ -34,7 +35,20 @@ class ChatRepo extends Repo{
 
 
 
-    public function UserFilter($request,$model){
+    public static function UserSendMessage($request){
+
+        $validator = Validator::make($request->all(),[
+            'text' => 'required|max:500',
+            'room_id' => 'required|integer',
+        ]);
+
+        return $validator;
+    }
+
+
+
+
+    public static function UserFilter($request,$model){
 
 
         $users = $model->query();
@@ -59,9 +73,36 @@ class ChatRepo extends Repo{
             $users->whereBetween('birthDate', [date('Y-m-d', strtotime('-'.($request->ageTo+1).' years')),date('Y-m-d', strtotime('-'.$request->ageFrom.' years'))] );
         }
 
-        return $users->paginate(25);
+        return $users->orderBy('online','desc')->paginate(25);
 
 
+    }
+
+
+
+
+
+
+    public static function UserChatRoom($parent_id,$child_id){
+
+        $chatRoom = Chat_room::where(['parent_id'=>$parent_id,'child_id'=>$child_id])->first();
+        if (empty($chatRoom)) {
+            $chatRoom = Chat_room::where(['parent_id'=>$child_id,'child_id'=>$parent_id])->first();
+        }
+
+        if (empty($chatRoom)) {
+
+            $chatRoom = Chat_room::create([
+                'code'=>$parent_id."_".$child_id,
+                'parent_id'=>$parent_id,
+                'child_id'=>$child_id,
+            ]);
+        }
+
+        $user = User::find($child_id);
+        $user->chat_room_id = $chatRoom->id;
+
+        return $user;
     }
 
 

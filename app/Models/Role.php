@@ -41,8 +41,8 @@ class Role extends Model
     public function getOperationsAttribute($value){
 
         return [
-            "edit" => url('admin/Admin/Role/viewCreateRole/'.$this->id),
-            "delete" => url('admin/Admin/Role/deleteRole/'.$this->id),
+            "edit" => url('admin/Role/viewCreateRole/'.$this->id),
+            "delete" => url('admin/Role/deleteRole/'.$this->id),
         ];
     }
 }

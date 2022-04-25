@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lang;
 use App\Models\User;
+use App\Models\Chat\Chat_room;
+use App\Models\Chat\Chat_message;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use App\Http\Resources\Users\UserResource;
@@ -73,10 +75,9 @@ class Chats extends Controller
     public function getUsers(Request $request){
 
         $user = new User;
-        $repo = new ChatRepo();
-        $users = $repo->UserFilter($request,$user);
+        $users = ChatRepo::UserFilter($request,$user);
 
-        $newUsers = $users->makeHidden(['image_url','operations'])->makeVisible('image_path');
+        $newUsers = $users;
         $users->data = $newUsers ;
 
         $data['status'] = true;
@@ -90,10 +91,52 @@ class Chats extends Controller
 
 
     public function getUserProfile($user_id){
+        $parent_id = Auth::guard('api')->id();
+        $user = ChatRepo::UserChatRoom($parent_id,$user_id);
+        $data['status'] = true;
+        $data['user'] = new UserResource($user);
+        return $data;
+
+    }
+
+
+
+
+
+    public function sendMessage(Request $request){
+
+
+        $validator = ChatRepo::UserSendMessage($request);
+        if($validator->fails()) {
+            return ChatRepo::ValidateResponse($validator);
+        }
+        $validator = $validator->validate();
+
+
+        $chat_room = Chat_room::find($validator['room_id']);
+
+        $validator['from_id'] = Auth::guard('api')->id();
+        $validator['to_id'] = $chat_room->child_id;
+        $message = Chat_message::create($validator);
+
+
+        $chat_room->last_message_id = $message->id;
+        if($validator['from_id'] == $chat_room->unread_parent_count) {
+            $chat_room->unread_child_count = $chat_room->unread_child_count+1;
+            $chat_room->unread_parent_count = 0;
+        }else{
+            $chat_room->unread_parent_count = $chat_room->unread_parent_count+1;
+            $chat_room->unread_child_count = 0;
+        }
+
+        $chat_room->save();
+
 
         $data['status'] = true;
-        $data['user'] = new UserResource(User::find($user_id));
+        $data['message'] = "message sent";
+
         return $data;
+
 
     }
 

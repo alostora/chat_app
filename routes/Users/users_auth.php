@@ -28,6 +28,7 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
             Route::post('changeLoginStatus','Chats@changeLoginStatus');
             Route::post('getUsers','Chats@getUsers');
             Route::get('getUserProfile/{user_id}','Chats@getUserProfile');
+            Route::post('sendMessage','Chats@sendMessage');
         });
 
     });
