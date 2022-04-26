@@ -54,7 +54,6 @@ class Chat_room extends Model
 
 
 
-
     public function getUnreadCountAttribute(){
         $id = Auth::guard('api')->id();
         $count = $id != $this->child_id ? $this->unread_parent_count : $this->unread_child_count;
