@@ -14,6 +14,7 @@ class UserRepo extends Repo{
 	    $validator = Validator::make($request->all(),[
 	        'name' => 'required|max:100',
 	        'email' => 'required|unique:users,email|max:100',
+	        'firebase_token' => 'required|max:255',
 	        'password' => 'required|max:100',
 	        'confirmPassword' => 'same:password',
 	    ]);
@@ -49,6 +50,7 @@ class UserRepo extends Repo{
 
 	    $validator = Validator::make($request->all(),[
 	        'email' => 'required|email|max:100',
+	        'firebase_token' => 'required|max:255',
 	        'password' => 'required|max:100',
 	    ]);
 

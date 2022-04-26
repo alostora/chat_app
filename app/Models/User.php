@@ -29,6 +29,7 @@ class User extends Authenticatable
         'online',//bolean
         'last_login_at',
         'bio',
+        'firebase_token',
     ];
 
     
@@ -41,6 +42,7 @@ class User extends Authenticatable
         'api_token',
         'remember_token',
         'email_verified_at',
+        'firebase_token',
         'created_at',
         'updated_at',
     ];
@@ -48,6 +50,7 @@ class User extends Authenticatable
     
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
 
 
@@ -107,6 +110,12 @@ class User extends Authenticatable
             "edit" => url('admin/User/viewCreateUser/'.$this->id),
             "delete" => url('admin/User/deleteUser/'.$this->id),
         ];
+    }
+
+
+
+    public function langauges(){
+        return $this->hasMany(User_lang::class,'user_id');
     }
 
 }

@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->boolean('online')->default(0);
             $table->string('last_login_at')->nullable();
             $table->text('bio')->nullable();
+            $table->string('firebase_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

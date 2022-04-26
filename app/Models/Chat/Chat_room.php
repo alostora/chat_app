@@ -4,6 +4,9 @@ namespace App\Models\Chat;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\Users\UserResource;
+use App\Models\User;
+use Auth;
 
 class Chat_room extends Model
 {
@@ -28,4 +31,54 @@ class Chat_room extends Model
         "unread_parent_count"=>"integer",
         "unread_child_count"=>"integer",
     ];
+
+
+
+    protected $appends = [
+        'unread_count',
+        'friend',
+        'last_message',
+        'all_messages',
+    ];
+
+
+
+
+    public function getFriendAttribute(){
+        $id = Auth::guard('api')->id();
+        $id = $id == $this->child_id ? $this->parent_id : $this->child_id;
+
+        $user = User::find($id);
+        return $user->makeHidden(['langauges','image_url','operations'])->makeVisible('image_path');
+    }
+
+
+
+
+    public function getUnreadCountAttribute(){
+        $id = Auth::guard('api')->id();
+        $count = $id != $this->child_id ? $this->unread_parent_count : $this->unread_child_count;
+        return $count;
+    }
+
+
+
+    public function getLastMessageAttribute(){
+        return Chat_message::find($this->last_message_id);
+    }
+
+
+
+
+    public function getAllMessagesAttribute(){
+        return Chat_message::where('room_id',$this->id)->orderBy('id','desc')->paginate(10);
+    }
+
+
+
+
+
+
+
+
 }

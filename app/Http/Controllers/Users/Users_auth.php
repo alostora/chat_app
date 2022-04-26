@@ -13,6 +13,7 @@ use Auth;
 use File;
 use Lang;
 use App\Mail\Forget_pass;
+use Carbon\Carbon;
 
 class Users_auth extends Controller
 {
@@ -30,6 +31,7 @@ class Users_auth extends Controller
         $validator = $validator->validated();
         unset($validator['confirmPassword']);
         $validator['api_token'] = Str::random(50);
+        $validator['last_login_at'] = Carbon::now('UTC');
         $userr = User::create($validator);
         $data['status'] = true;
         $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
@@ -56,6 +58,8 @@ class Users_auth extends Controller
             if(Hash::check($validator['password'],$user->password)){
 
                 $user->api_token = empty($user->api_token) ? Str::random(50) : $user->api_token;
+                $user->firebase_token = $validator['firebase_token'];
+                $user->last_login_at = Carbon::now('UTC');
                 $user->save();
 
                 $data['status'] = true;

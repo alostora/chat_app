@@ -6,13 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lang;
 use App\Models\User;
-use App\Models\Chat\Chat_room;
-use App\Models\Chat\Chat_message;
 use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
 use Auth;
+use Carbon\Carbon;
 
 
 class Chats extends Controller
@@ -20,6 +19,7 @@ class Chats extends Controller
     
 
     public function langs(){
+       
         $data['status'] = true;
         $data['Langauges'] = Lang::get()->makeHidden('operations');
 
@@ -30,7 +30,7 @@ class Chats extends Controller
 
     public function createLang(Request $request){
 
-        $validator = ChatRepo::UserLangValidate($request);
+        $validator = ChatRepo::LangValidate($request);
         if($validator->fails()) {
             return ChatRepo::ValidateResponse($validator);
         }
@@ -55,12 +55,13 @@ class Chats extends Controller
 
 
     public function changeLoginStatus(Request $request){
-        $validator = ChatRepo::UserChangeLoginState($request);
+        $validator = ChatRepo::ChangeLoginStateValidate($request);
         if($validator->fails()) {
             return ChatRepo::ValidateResponse($validator);
         }
-
+        
         $validator = $validator->validate();
+        $validator['last_login_at'] = Carbon::now('UTC'); 
         $user = Auth::guard('api')->user()->update($validator);
 
         $data['status'] = true;
@@ -99,46 +100,6 @@ class Chats extends Controller
 
     }
 
-
-
-
-
-    public function sendMessage(Request $request){
-
-
-        $validator = ChatRepo::UserSendMessage($request);
-        if($validator->fails()) {
-            return ChatRepo::ValidateResponse($validator);
-        }
-        $validator = $validator->validate();
-
-
-        $chat_room = Chat_room::find($validator['room_id']);
-
-        $validator['from_id'] = Auth::guard('api')->id();
-        $validator['to_id'] = $chat_room->child_id;
-        $message = Chat_message::create($validator);
-
-
-        $chat_room->last_message_id = $message->id;
-        if($validator['from_id'] == $chat_room->unread_parent_count) {
-            $chat_room->unread_child_count = $chat_room->unread_child_count+1;
-            $chat_room->unread_parent_count = 0;
-        }else{
-            $chat_room->unread_parent_count = $chat_room->unread_parent_count+1;
-            $chat_room->unread_child_count = 0;
-        }
-
-        $chat_room->save();
-
-
-        $data['status'] = true;
-        $data['message'] = "message sent";
-
-        return $data;
-
-
-    }
 
 
 
