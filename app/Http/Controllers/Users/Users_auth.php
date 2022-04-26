@@ -31,7 +31,7 @@ class Users_auth extends Controller
         $validator = $validator->validated();
         unset($validator['confirmPassword']);
         $validator['api_token'] = Str::random(50);
-        $validator['last_login_at'] = Carbon::now('UTC');
+        $validator['last_login_at'] = Carbon::now(config('app.timezone'));
         $userr = User::create($validator);
         $data['status'] = true;
         $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
@@ -59,7 +59,7 @@ class Users_auth extends Controller
 
                 $user->api_token = empty($user->api_token) ? Str::random(50) : $user->api_token;
                 $user->firebase_token = $validator['firebase_token'];
-                $user->last_login_at = Carbon::now('UTC');
+                $user->last_login_at = Carbon::now(config('app.timezone'));
                 $user->save();
 
                 $data['status'] = true;

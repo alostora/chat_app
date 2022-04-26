@@ -61,7 +61,7 @@ class Chats extends Controller
         }
         
         $validator = $validator->validate();
-        $validator['last_login_at'] = Carbon::now('UTC'); 
+        $validator['last_login_at'] = Carbon::now(config('app.timezone')); 
         $user = Auth::guard('api')->user()->update($validator);
 
         $data['status'] = true;
