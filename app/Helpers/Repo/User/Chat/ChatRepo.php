@@ -112,23 +112,31 @@ class ChatRepo extends Repo{
 
 
 
-    public static function SendMessage($validator){
-        $chat_room = Chat_room::find($validator['room_id']);
+    public static function CreateMessage($data){
 
-        $validator['to_id'] = $chat_room->child_id == $validator['from_id'] ? $chat_room->parent_id : $chat_room->child_id;
+        $chat_room = Chat_room::find($data['room_id']);
+        $data['from_id'] = $data['from_id']->id;
 
-        $message = Chat_message::create($validator);
+        $data['to_id'] = $chat_room->child_id == $data['from_id'] ? $chat_room->parent_id : $chat_room->child_id;
+
+        $message = Chat_message::create($data);
+        $message->chat_room = $chat_room;
+
 
         $chat_room->last_message_id = $message->id;
-        if($validator['from_id'] == $chat_room->parent_id) {
+        if($data['from_id'] == $chat_room->parent_id) {
             $chat_room->unread_child_count = $chat_room->unread_child_count+1;
             $chat_room->unread_parent_count = 0;
+            $message->unreadTotalSingleRoom = $chat_room->unread_child_count;
         }else{
             $chat_room->unread_parent_count = $chat_room->unread_parent_count+1;
             $chat_room->unread_child_count = 0;
+            $message->unreadTotalSingleRoom = $chat_room->unread_parent_count;
         }
 
+        Chat_message::where(['room_id'=>$chat_room->id,'to_id'=>$data['from_id']])->update(['readed'=>true]);
         $chat_room->save();
+
         return $message;
     }
 

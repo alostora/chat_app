@@ -29,7 +29,9 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
             Route::post('getUsers','Chats@getUsers');
             Route::get('getUserProfile/{user_id}','Chats@getUserProfile');
             Route::get('chatRoom/{room_id}','Messages@chatRoom');
+            Route::get('allChatRooms','Messages@allChatRooms');
             Route::post('sendMessage','Messages@sendMessage');
+            Route::get('readMessages/{room_id}','Messages@readMessages');
         });
 
     });

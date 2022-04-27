@@ -10,6 +10,7 @@ use App\Models\Chat\User_lang;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
+use App\Helpers\Notifi\Notifi;
 use Auth;
 use Carbon\Carbon;
 
@@ -55,14 +56,18 @@ class Chats extends Controller
 
 
     public function changeLoginStatus(Request $request){
+
         $validator = ChatRepo::ChangeLoginStateValidate($request);
         if($validator->fails()) {
             return ChatRepo::ValidateResponse($validator);
         }
         
         $validator = $validator->validate();
-        $validator['last_login_at'] = Carbon::now(config('app.timezone')); 
-        $user = Auth::guard('api')->user()->update($validator);
+        $validator['last_login_at'] = Carbon::now(config('app.timezone'));
+        $user = Auth::guard('api')->user();
+        $user->update($validator);
+
+        Notifi::ChangeLoginStatus($user);
 
         $data['status'] = true;
         $data['message'] = 'login status changed';
@@ -97,7 +102,6 @@ class Chats extends Controller
         $data['status'] = true;
         $data['user'] = new UserResource($user);
         return $data;
-
     }
 
 

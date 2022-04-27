@@ -34,12 +34,34 @@ class Chat_room extends Model
 
 
 
+    protected $hidden = [
+        'code',
+        'parent_id',
+        'child_id',
+        'last_message_id',
+        'all_messages',
+        "unread_parent_count",
+        "unread_child_count",
+        "created_at",
+        "updated_at",
+    ];
+
+
     protected $appends = [
         'unread_count',
         'friend',
         'last_message',
         'all_messages',
     ];
+
+
+
+
+    public function getUnreadCountAttribute(){
+        $id = Auth::guard('api')->id();
+        $count = $id != $this->child_id ? $this->unread_parent_count : $this->unread_child_count;
+        return $count;
+    }
 
 
 
@@ -52,13 +74,6 @@ class Chat_room extends Model
         return $user->makeHidden(['langauges','image_url','operations'])->makeVisible('image_path');
     }
 
-
-
-    public function getUnreadCountAttribute(){
-        $id = Auth::guard('api')->id();
-        $count = $id != $this->child_id ? $this->unread_parent_count : $this->unread_child_count;
-        return $count;
-    }
 
 
 
