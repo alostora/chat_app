@@ -32,6 +32,7 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
             Route::get('allChatRooms','Messages@allChatRooms');
             Route::post('sendMessage','Messages@sendMessage');
             Route::get('readMessages/{room_id}','Messages@readMessages');
+            Route::get('typingNow/{to_user_id}','Messages@typingNow');
         });
 
     });

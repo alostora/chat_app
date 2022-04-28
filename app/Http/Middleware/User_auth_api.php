@@ -20,7 +20,7 @@ class User_auth_api
             return $next($request);
         }else{
             $data['status'] = false;
-            $data['message'] = \Lang::get('leftsidebar.plz_login');
+            $data['message'] = 'Unauthorized user please login first';
             return response($data);
         }
     }

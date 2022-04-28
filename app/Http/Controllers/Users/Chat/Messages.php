@@ -99,12 +99,22 @@ class Messages extends Controller
                 'to_id' => $to_id,
             ])->update(['readed' => true]);
 
-            return Notifi::ReadedMessageNotifi($from_id,$room_id);
+            Notifi::ReadedMessageNotifi($from_id,$room_id);
         }
         
         $data['status'] = true;
         $data['message'] = 'all messages readed successfully';
 
+        return $data;
+    }
+
+
+
+
+    public function typingNow($to_user_id){
+        Notifi::TypingNowNotifi($to_user_id);
+        $data['status'] = true;
+        $data['message'] = 'typing now...';
         return $data;
     }
 

@@ -9,12 +9,28 @@ class Notifi{
 
     protected const API_ACCESS_KEY = 'AAAAiWgTf2E:APA91bFlGbf9NG4whNrhuq-e1FpV6hrlx8tBraVzpf8Ic7NVZxCIa9kqCPjrIvt7JItpYTmlgenWXP6_fBTuuXstAhWEyRiFIu48D-3FF23JbB7VJEc1pWbu3Qw_m-lSqI0H3fpJpWFM';
 
+
+    private static function CURL_REQUEST($fields,$headers){
+        #Send Reponse To FireBase Server    
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+        curl_setopt( $ch,CURLOPT_POST, true );
+        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+        $result = curl_exec($ch );
+        curl_close( $ch );
+        return $result;
+    }
+
+
+
     public static function SenMessageNotifi($data,$message){
 
         $chat_room = $message->chat_room;
         $unreadTotalSingleRoom = $message->unreadTotalSingleRoom;
-        unset($message->chat_room);
-        unset($message->unreadTotalSingleRoom);
+        unset($message->chat_room,$message->unreadTotalSingleRoom);
 
         if ($chat_room) {
 
@@ -45,62 +61,10 @@ class Notifi{
                     'Content-Type: application/json'
                 ];
 
-                #Send Reponse To FireBase Server    
-                $ch = curl_init();
-                curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-                curl_setopt( $ch,CURLOPT_POST, true );
-                curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-                curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-                curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-                curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-                $result = curl_exec($ch );
-                curl_close( $ch );
-                return $result;
+                return self::CURL_REQUEST($fields,$headers);
+
+             
             }
-        }
-    }
-
-
-
-
-
-
-
-    public static function ReadedMessageNotifi($from_id,$room_id){
-
-        $user = User::where(['id'=>$from_id,'online'=>true])->first();
-
-        if ($user) {
-            $registrationIds = $user->firebase_token;
-            $fields = [
-                'to'=> $registrationIds,
-                
-                "data" => [
-                    "sound"=> "default",
-                    "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
-                    "notification_foreground"=>"true",
-                    "notification_android_sound"=>"default",
-                    "type" => "read_message",
-                    "room_id" => $room_id,
-                ]
-            ];
-        
-            $headers = [
-                'Authorization: key=' . self::API_ACCESS_KEY,
-                'Content-Type: application/json'
-            ];
-
-            #Send Reponse To FireBase Server    
-            $ch = curl_init();
-            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-            curl_setopt( $ch,CURLOPT_POST, true );
-            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-            $result = curl_exec($ch );
-            curl_close( $ch );
-            return $result;
         }
     }
 
@@ -140,19 +104,74 @@ class Notifi{
                 'Content-Type: application/json'
             ];
 
-            #Send Reponse To FireBase Server    
-            $ch = curl_init();
-            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-            curl_setopt( $ch,CURLOPT_POST, true );
-            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-            $result = curl_exec($ch );
-            curl_close( $ch );
-            return $result;
+            return self::CURL_REQUEST($fields,$headers);
         }
     }
+
+
+
+
+    public static function ReadedMessageNotifi($from_id,$room_id){
+
+        $user = User::where(['id'=>$from_id,'online'=>true])->first();
+
+        if ($user) {
+            $registrationIds = $user->firebase_token;
+            $fields = [
+                'to'=> $registrationIds,
+                
+                "data" => [
+                    "sound"=> "default",
+                    "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
+                    "notification_foreground"=>"true",
+                    "notification_android_sound"=>"default",
+                    "type" => "read_message",
+                    "room_id" => $room_id,
+                ]
+            ];
+        
+            $headers = [
+                'Authorization: key=' . self::API_ACCESS_KEY,
+                'Content-Type: application/json'
+            ];
+
+            return self::CURL_REQUEST($fields,$headers);
+        }
+    }
+
+
+
+
+
+    public static function TypingNowNotifi($to_user_id){
+
+        $user = User::find($to_user_id);
+
+        if ($user) {
+            $registrationIds = $user->firebase_token;
+            $fields = [
+                'to'=> $registrationIds,
+                
+                "data" => [
+                    "sound"=> "default",
+                    "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
+                    "notification_foreground"=>"true",
+                    "notification_android_sound"=>"default",
+                    "type" => "typing_now",
+                ]
+            ];
+        
+            $headers = [
+                'Authorization: key=' . self::API_ACCESS_KEY,
+                'Content-Type: application/json'
+            ];
+
+            return self::CURL_REQUEST($fields,$headers);
+        }
+    }
+
+
+
 
 
 
