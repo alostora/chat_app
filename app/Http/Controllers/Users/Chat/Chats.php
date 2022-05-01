@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Lang;
 use App\Models\User;
 use App\Models\Chat\User_lang;
+use App\Models\Chat\Chat_room;
+use App\Models\Chat\User_report_list;
 use App\Helpers\Repo\User\Chat\ChatRepo;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
@@ -61,8 +63,8 @@ class Chats extends Controller
         if($validator->fails()) {
             return ChatRepo::ValidateResponse($validator);
         }
-        
         $validator = $validator->validate();
+        
         $validator['last_login_at'] = Carbon::now(config('app.timezone'));
         $user = Auth::guard('api')->user();
         $user->update($validator);
@@ -83,9 +85,6 @@ class Chats extends Controller
         $user = new User;
         $users = ChatRepo::UserFilter($request,$user);
 
-        $newUsers = $users;
-        $users->data = $newUsers ;
-
         $data['status'] = true;
         $data['users'] = new UserCollection($users);
         return $data;
@@ -102,6 +101,82 @@ class Chats extends Controller
         $data['status'] = true;
         $data['user'] = new UserResource($user);
         return $data;
+    }
+
+
+
+
+    public function blockUser(Request $request){
+        
+        $validator = ChatRepo::BlockUserValidate($request);
+        if($validator->fails()) {
+            return ChatRepo::ValidateResponse($validator);
+        }
+
+        $data = $validator->validate();
+
+        $chat_room = Chat_room::find($data['room_id']);
+        $block_from = Auth::guard('api')->id();
+
+        if(!empty($chat_room)){
+
+            $exsits_block_to = $chat_room->block_to;
+
+            if($exsits_block_to == null) {
+                if($block_from == $chat_room->parent_id){
+                    $block_to = 'child_id';
+                }else{
+                    $block_to = 'parent_id';
+                }
+            }
+
+            if($exsits_block_to == 'parent_id') {
+                if($block_from == $chat_room->parent_id){
+                    $block_to = 'all';
+                }else{
+                    $block_to = null;
+                }
+                
+            }
+
+            if ($exsits_block_to == 'child_id') {
+                if($block_from == $chat_room->parent_id){
+                    $block_to = null;
+                }else{
+                    $block_to = 'all';
+                }
+            }
+
+            $chat_room->block_to = $block_to;
+            $chat_room->save();
+
+        }
+
+
+        $res['status'] = true;
+        $res['message'] = 'user blocked successfully';
+        return $res;
+    }
+
+
+
+
+    public function reportUser(Request $request){
+
+        $validator = ChatRepo::ReportUserValidate($request);
+        if($validator->fails()) {
+            return ChatRepo::ValidateResponse($validator);
+        }
+
+        $data = $validator->validate();
+        $user = User::find($data['report_to']);
+        if ($user) {
+            User_report_list::create($data);
+        }
+        
+        $res['status'] = true;
+        $res['message'] = 'user reported successfully';
+        return $res;
     }
 
 

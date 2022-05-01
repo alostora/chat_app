@@ -10,6 +10,7 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
     Route::post('register','Users_auth@register');
     Route::post('login','Users_auth@login');
     Route::post('postForgetPass','Users_auth@postForgetPass');
+    Route::get('logOut','Users_auth@logOut');
 
     //Auth Routes
     Route::group(['middleware'=>'user_auth_api'],function(){
@@ -18,7 +19,6 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
         Route::get('profile','Users_auth@profile');
         Route::post('updateProfile','Users_auth@updateProfile');
         Route::post('changePassword','Users_auth@changePassword');
-        Route::get('logOut','Users_auth@logOut');
 
 
         Route::group(['namespace'=>'Chat'],function(){
@@ -28,12 +28,20 @@ Route::group(['namespace'=>'Users','middleware'=>'api_lang'],function(){
             Route::post('changeLoginStatus','Chats@changeLoginStatus');
             Route::post('getUsers','Chats@getUsers');
             Route::get('getUserProfile/{user_id}','Chats@getUserProfile');
+            Route::post('blockUser','Chats@blockUser');
+            Route::post('reportUser','Chats@reportUser');
+            
+
             Route::get('chatRoom/{room_id}','Messages@chatRoom');
             Route::get('allChatRooms','Messages@allChatRooms');
             Route::post('sendMessage','Messages@sendMessage');
             Route::get('readMessages/{room_id}','Messages@readMessages');
             Route::get('typingNow/{to_user_id}','Messages@typingNow');
+            Route::post('translateMessage','Messages@translateMessage');
+            Route::post('deleteMessage','Messages@deleteMessage');
         });
 
     });
+
+
 });

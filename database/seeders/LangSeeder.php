@@ -1,12 +1,12 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 
 use Illuminate\Database\Seeder;
-use \App\Models\Category;
+use App\Models\Lang;
+use App\Models\chat\User_lang;
 
-class CategorySeeder extends Seeder
+class LangSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +15,7 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::factory(2)->create();
 
-
-
+        Lang::factory(40)->create();
     }
 }

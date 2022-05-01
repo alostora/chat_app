@@ -28,42 +28,44 @@ class Notifi{
 
     public static function SenMessageNotifi($data,$message){
 
-        $chat_room = $message->chat_room;
-        $unreadTotalSingleRoom = $message->unreadTotalSingleRoom;
-        unset($message->chat_room,$message->unreadTotalSingleRoom);
+        if ($message) {
+            // code...
+            $chat_room = $message->chat_room;
+            $unreadTotalSingleRoom = $message->unreadTotalSingleRoom;
+            unset($message->chat_room,$message->unreadTotalSingleRoom);
 
-        if ($chat_room) {
+            if ($chat_room) {
 
-            $from = $data['from_id'];
-            $to_id = $chat_room->child_id == $from->id ? $chat_room->parent_id : $chat_room->child_id;
+                $from = $data['from_id'];
+                $to_id = $chat_room->child_id == $from->id ? $chat_room->parent_id : $chat_room->child_id;
 
-            $user = User::find($to_id);
+                $user = User::where('id',$to_id)->where('api_token','!=',null)->first();
 
-            if ($user) {
-                $registrationIds =  $user->firebase_token;
-                $msg = ['title' => $from->name,'body'  => $message->text];
-                $fields = [
-                    'to'=> $registrationIds,
-                    'notification' => $msg,
-                    "data" => [
-                        "sound"=> "default",
-                        "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
-                        "notification_foreground"=>"true",
-                        "notification_android_sound"=>"default",
-                        "type" => "new_message",
-                        "unreadTotalSingleRoom" => $unreadTotalSingleRoom,
-                        "message" => $message,
-                    ]
-                ];
-            
-                $headers = [
-                    'Authorization: key=' . self::API_ACCESS_KEY,
-                    'Content-Type: application/json'
-                ];
+                if ($user) {
+                    $registrationIds =  $user->firebase_token;
+                    $msg = ['title' => $from->name,'body'  => $message->text];
+                    $fields = [
+                        'to'=> $registrationIds,
+                        'notification' => $msg,
+                        "data" => [
+                            "sound"=> "default",
+                            "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
+                            "notification_foreground"=>"true",
+                            "notification_android_sound"=>"default",
+                            "type" => "new_message",
+                            "unreadTotalSingleRoom" => $unreadTotalSingleRoom,
+                            "message" => $message,
+                        ]
+                    ];
+                
+                    $headers = [
+                        'Authorization: key=' . self::API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    ];
 
-                return self::CURL_REQUEST($fields,$headers);
-
-             
+                    return self::CURL_REQUEST($fields,$headers);
+                 
+                }
             }
         }
     }
@@ -79,7 +81,7 @@ class Notifi{
         $values = array_unique(array_keys($chat_rooms));
         $merged_array = array_merge($keys,$values);
 
-        $users = User::whereIn('id',$merged_array)->where('id','!=',$user->id)->pluck('firebase_token');
+        $users = User::whereIn('id',$merged_array)->where('online',true)->where('id','!=',$user->id)->where('api_token','!=',null)->pluck('firebase_token');
        
         if (count($users) > 0) {
             $registrationIds = $users;
@@ -113,7 +115,7 @@ class Notifi{
 
     public static function ReadedMessageNotifi($from_id,$room_id){
 
-        $user = User::where(['id'=>$from_id,'online'=>true])->first();
+        $user = User::where('id',$from_id)->where('online',true)->where('api_token','!=',null)->first();
 
         if ($user) {
             $registrationIds = $user->firebase_token;
@@ -145,7 +147,7 @@ class Notifi{
 
     public static function TypingNowNotifi($to_user_id){
 
-        $user = User::find($to_user_id);
+        $user = User::where(['id'=>$to_user_id,'online'=>true])->first();
 
         if ($user) {
             $registrationIds = $user->firebase_token;
@@ -157,7 +159,8 @@ class Notifi{
                     "click_action"=>"FLUTTER_NOTIFICATION_CLICK",
                     "notification_foreground"=>"true",
                     "notification_android_sound"=>"default",
-                    "type" => "typing_now",
+                    "type" => "typing",
+                    "userId" => auth()->guard('api')->id(),
                 ]
             ];
         

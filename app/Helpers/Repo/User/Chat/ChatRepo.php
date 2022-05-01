@@ -37,6 +37,33 @@ class ChatRepo extends Repo{
 
 
 
+
+
+
+    public static function BlockUserValidate($request){
+
+         $validator = Validator::make($request->all(),[
+            'room_id' => 'required|integer',
+        ]);
+
+        return $validator;
+    }
+
+
+
+    public static function ReportUserValidate($request){
+
+         $validator = Validator::make($request->all(),[
+            'report_to' => 'required|integer',
+            'report_reason' => 'required|max:150',
+        ]);
+
+        return $validator;
+    }
+
+
+
+
     public static function UserFilter($request,$model){
 
 
@@ -115,29 +142,58 @@ class ChatRepo extends Repo{
     public static function CreateMessage($data){
 
         $chat_room = Chat_room::find($data['room_id']);
-        $data['from_id'] = $data['from_id']->id;
 
-        $data['to_id'] = $chat_room->child_id == $data['from_id'] ? $chat_room->parent_id : $chat_room->child_id;
+        $message = "";
 
-        $message = Chat_message::create($data);
-        $message->chat_room = $chat_room;
+        if($chat_room){
+            $data['from_id'] = $data['from_id']->id;
+
+            $data['to_id'] = $chat_room->child_id == $data['from_id'] ? $chat_room->parent_id : $chat_room->child_id;
+
+            $message = Chat_message::create($data);
+            $message->chat_room = $chat_room;
 
 
-        $chat_room->last_message_id = $message->id;
-        if($data['from_id'] == $chat_room->parent_id) {
-            $chat_room->unread_child_count = $chat_room->unread_child_count+1;
-            $chat_room->unread_parent_count = 0;
-            $message->unreadTotalSingleRoom = $chat_room->unread_child_count;
-        }else{
-            $chat_room->unread_parent_count = $chat_room->unread_parent_count+1;
-            $chat_room->unread_child_count = 0;
-            $message->unreadTotalSingleRoom = $chat_room->unread_parent_count;
+            $chat_room->last_message_id = $message->id;
+            if($data['from_id'] == $chat_room->parent_id) {
+                $chat_room->unread_child_count = $chat_room->unread_child_count+1;
+                $chat_room->unread_parent_count = 0;
+                $message->unreadTotalSingleRoom = $chat_room->unread_child_count;
+            }else{
+                $chat_room->unread_parent_count = $chat_room->unread_parent_count+1;
+                $chat_room->unread_child_count = 0;
+                $message->unreadTotalSingleRoom = $chat_room->unread_parent_count;
+            }
+
+            Chat_message::where(['room_id'=>$chat_room->id,'to_id'=>$data['from_id']])->update(['readed'=>true]);
+            $chat_room->save();
         }
 
-        Chat_message::where(['room_id'=>$chat_room->id,'to_id'=>$data['from_id']])->update(['readed'=>true]);
-        $chat_room->save();
-
         return $message;
+    }
+
+
+    
+
+    public static function TranslateMessageValidate($request){
+
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|integer',
+            'translatedText' => 'required|max:500',
+        ]);
+
+        return $validator;
+    }
+
+
+
+    public static function DeleteMessageValidate($request){
+
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|integer',
+        ]);
+
+        return $validator;
     }
 
 

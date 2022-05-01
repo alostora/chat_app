@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('last_message_id')->unsigned()->unique()->nullable();
             $table->integer('unread_parent_count')->unsigned()->default(0);
             $table->integer('unread_child_count')->unsigned()->default(0);
+            $table->enum('block_to',['parent_id','child_id','all'])->nullable();
 
             $table->bigInteger('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')

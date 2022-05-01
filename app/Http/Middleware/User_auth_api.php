@@ -21,7 +21,7 @@ class User_auth_api
         }else{
             $data['status'] = false;
             $data['message'] = 'Unauthorized user please login first';
-            return response($data);
+            return response($data, 403);
         }
     }
 }

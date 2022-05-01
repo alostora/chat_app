@@ -20,6 +20,7 @@ class Chat_room extends Model
         "last_message_id",//not foreign key
         "unread_parent_count",
         "unread_child_count",
+        "block_to",//enum ['parent_id','child_id','all']
 
     ];
 

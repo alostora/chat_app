@@ -217,6 +217,15 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'lang'],funct
 
 
 	});
+
+	
+
+
+
+    //fake users
+    Route::get('fakeUsers','Users@fakeUsers');
+
+
 });
 
 

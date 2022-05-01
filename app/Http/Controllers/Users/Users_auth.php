@@ -32,6 +32,9 @@ class Users_auth extends Controller
         unset($validator['confirmPassword']);
         $validator['api_token'] = Str::random(50);
         $validator['last_login_at'] = Carbon::now(config('app.timezone'));
+
+        User::where('firebase_token',$validator['firebase_token'])->update(['firebase_token'=>null]);
+
         $userr = User::create($validator);
         $data['status'] = true;
         $data['user'] = $userr->makeHidden(['image_url','operations'])->makeVisible(['image_path','api_token']);
@@ -56,7 +59,7 @@ class Users_auth extends Controller
 
         if(!empty($user)) {
             if(Hash::check($validator['password'],$user->password)){
-
+                User::where('firebase_token',$validator['firebase_token'])->update(['firebase_token'=>null]);
                 $user->api_token = empty($user->api_token) ? Str::random(50) : $user->api_token;
                 $user->firebase_token = $validator['firebase_token'];
                 $user->last_login_at = Carbon::now(config('app.timezone'));
@@ -182,8 +185,12 @@ class Users_auth extends Controller
 
     public function logOut(Request $request){
         $user = Auth::guard('api')->user();
-        $user->api_token = null;
-        $user->save();
+        if($user){
+            $user->api_token = null;
+            $user->online = false;
+            $user->save();
+            \App\Helpers\Notifi\Notifi::ChangeLoginStatus($user);
+        }
 
         $data['status'] = true;
         $data['message'] = "Logged out successfully";
